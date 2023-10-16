@@ -5,59 +5,72 @@ import java.util.ArrayList;
 
 import com.project.common.JDBCTemplate;
 import com.project.dao.MemberDao;
+import com.project.dao.MusicDao;
 import com.project.vo.Member;
+import com.project.vo.Music;
 
-public class MemberService {
+public class MusicService {
 	
-	public int insertMember(Member m) {
+	public int insertMusic(Music m) {
 		
 		Connection conn = JDBCTemplate.getConnection();
-		int result = new MemberDao().insertMember(conn, m);
+		int result = new MusicDao().insertMusic(conn, m);
 		
 		if(result > 0) {
 			JDBCTemplate.commit(conn);
 		}else {
 			JDBCTemplate.rollback(conn);
 		}
-		
 		JDBCTemplate.close(conn);
+		
 		return result;
 	}
 	
-	public ArrayList<Member> selectList(){
+	public int mInsertMusic(Music m) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new MusicDao().mInsertMusic(conn, m);
+		
+		if(result > 0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		
+		return result;
+	}
+	
+	public ArrayList<Music> selectList(){
 		Connection conn = JDBCTemplate.getConnection();
 		
-		ArrayList<Member> list = new MemberDao().selectList(conn);
+		ArrayList<Music> list = new MusicDao().selectList(conn);
 		JDBCTemplate.close(conn);
 		
 		return list;
 	}
 	
-	public Member selectByUserId(String userId) {
+	public ArrayList<Music> selectmList(Member m){
 		Connection conn = JDBCTemplate.getConnection();
-		Member m = new MemberDao().selectByUserId(conn, userId);
+		
+		ArrayList<Music> mList = new MusicDao().selectmList(conn, m.getUserNo());
+		JDBCTemplate.close(conn);
+		
+		return mList;
+	}
+	
+	public Music selectBySongName(String songName) {
+		Connection conn = JDBCTemplate.getConnection();
+		Music m = new MusicDao().selectBySongName(conn, songName);
 		JDBCTemplate.close(conn);
 		
 		return m;
 	}
 	
-	public Member selectByIdPwd(String userId, String userPwd) {
-		Connection conn = JDBCTemplate.getConnection();
-		Member m = new MemberDao().loginMember(conn, userId, userPwd);
 	
-		return m;	
-	}
 	
-	public ArrayList<Member> selectByUserName(String keyword){
+	public int deleteMusic(String songName) {
 		Connection conn = JDBCTemplate.getConnection();
-		ArrayList<Member> list = new MemberDao().selectByUserName(conn, keyword);
-		JDBCTemplate.close(conn);
-		return list;
-	}
-	
-	public int updateMember(Member m){
-		Connection conn = JDBCTemplate.getConnection();
-		int result = new MemberDao().updateMember(conn, m);
+		int result = new MemberDao().deleteMusic(conn, songName);
 		
 		if(result > 0) {
 			JDBCTemplate.commit(conn);
@@ -69,9 +82,9 @@ public class MemberService {
 		return result;
 	}
 	
-	public int deleteMember(String userId) {
+	public int deleteMlistMusic(String songName) {
 		Connection conn = JDBCTemplate.getConnection();
-		int result = new MemberDao().deleteMember(conn, userId);
+		int result = new MemberDao().deleteMlistMusic(conn, songName);
 		
 		if(result > 0) {
 			JDBCTemplate.commit(conn);
